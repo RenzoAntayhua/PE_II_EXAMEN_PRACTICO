@@ -28,7 +28,7 @@ import CompetitorSalesTable from './CompetitorSalesTable';
 import BCGTable from './BCGTable';
 import BCGBubbleChart from './BCGBubbleChart';
 
-const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
+const BCGMatrixSection = ({ projectId, sectionData, onDataUpdate }) => {
   const [bcgData, setBcgData] = useState({
     salesForecast: {
       products: [],
@@ -47,8 +47,26 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBCGData();
-  }, [projectId]);
+    try {
+      const content = sectionData?.content;
+      const parsed = typeof content === 'string' ? JSON.parse(content) : content;
+      if (parsed && parsed.salesForecast && parsed.marketGrowthRates && parsed.competitorSales && parsed.bcgTable) {
+        setBcgData(parsed);
+      } else {
+        setBcgData(prev => ({ ...prev }));
+      }
+    } catch (error) {
+      setBcgData(prev => ({ ...prev }));
+    } finally {
+      setLoading(false);
+    }
+  }, [sectionData]);
+
+  useEffect(() => {
+    if (!loading) {
+      onDataUpdate({ ...sectionData, content: bcgData });
+    }
+  }, [bcgData]);
 
   const fetchBCGData = async () => {
     try {
@@ -112,6 +130,15 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
       salesPercentage: 0
     });
     
+    // Asegurar que todos los períodos tengan un valor para el nuevo producto
+    updatedData.marketGrowthRates.periods = bcgData.marketGrowthRates.periods.map(period => ({
+      ...period,
+      productValues: [
+        ...period.productValues,
+        { productId: newProduct.id, value: 0 }
+      ]
+    }));
+
     setBcgData(updatedData);
   };
 
@@ -198,10 +225,19 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
   const updatePeriodValue = (periodId, productId, value) => {
     const updatedPeriods = bcgData.marketGrowthRates.periods.map(period => {
       if (period.id === periodId) {
-        const updatedProductValues = period.productValues.map(pv =>
-          pv.productId === productId ? { ...pv, value: Number(value) || 0 } : pv
-        );
-        return { ...period, productValues: updatedProductValues };
+        let found = false;
+        const updatedProductValues = period.productValues.map(pv => {
+          if (pv.productId === productId) {
+            found = true;
+            return { ...pv, value: Number(value) || 0 };
+          }
+          return pv;
+        });
+        // Si no existe el registro para el producto, añadirlo
+        const finalProductValues = found
+          ? updatedProductValues
+          : [...updatedProductValues, { productId, value: Number(value) || 0 }];
+        return { ...period, productValues: finalProductValues };
       }
       return period;
     });
@@ -245,11 +281,7 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
           <AssessmentIcon />
           Matriz BCG
         </Typography>
-        {isEditing && (
-          <Button variant="contained" onClick={saveBCGData}>
-            Guardar Cambios
-          </Button>
-        )}
+        <Box />
       </Box>
 
       <Grid container spacing={3}>
@@ -259,11 +291,9 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6">Tabla de Previsión de Ventas</Typography>
-                {isEditing && (
-                  <Button startIcon={<AddIcon />} onClick={addProduct}>
-                    Agregar Producto
-                  </Button>
-                )}
+                <Button startIcon={<AddIcon />} onClick={addProduct}>
+                  Agregar Producto
+                </Button>
               </Box>
               
               <TableContainer component={Paper}>
@@ -273,7 +303,7 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                       <TableCell>Productos</TableCell>
                       <TableCell align="right">Ventas</TableCell>
                       <TableCell align="right">Total %</TableCell>
-                      {isEditing && <TableCell align="center">Acciones</TableCell>}
+                      <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -284,29 +314,21 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                       return (
                         <TableRow key={product.id}>
                           <TableCell>
-                            {isEditing ? (
-                              <TextField
-                                value={product.name}
-                                onChange={(e) => updateProductName(product.id, e.target.value)}
-                                size="small"
-                                fullWidth
-                              />
-                            ) : (
-                              product.name
-                            )}
+                            <TextField
+                              value={product.name}
+                              onChange={(e) => updateProductName(product.id, e.target.value)}
+                              size="small"
+                              fullWidth
+                            />
                           </TableCell>
                           <TableCell align="right">
-                            {isEditing ? (
-                              <TextField
-                                type="number"
-                                value={product.sales}
-                                onChange={(e) => updateProductSales(product.id, e.target.value)}
-                                size="small"
-                                sx={{ width: 100 }}
-                              />
-                            ) : (
-                              product.sales.toLocaleString()
-                            )}
+                            <TextField
+                              type="number"
+                              value={product.sales}
+                              onChange={(e) => updateProductSales(product.id, e.target.value)}
+                              size="small"
+                              sx={{ width: 100 }}
+                            />
                           </TableCell>
                           <TableCell align="right">
                             <Chip 
@@ -315,17 +337,15 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                               variant="outlined" 
                             />
                           </TableCell>
-                          {isEditing && (
-                            <TableCell align="center">
-                              <IconButton 
-                                onClick={() => removeProduct(product.id)}
-                                color="error"
-                                size="small"
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </TableCell>
-                          )}
+                          <TableCell align="center">
+                            <IconButton 
+                              onClick={() => removeProduct(product.id)}
+                              color="error"
+                              size="small"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -337,7 +357,7 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                       <TableCell align="right" sx={{ fontWeight: 'bold' }}>
                         <Chip label="100%" color="success" />
                       </TableCell>
-                      {isEditing && <TableCell />}
+                      <TableCell />
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -352,11 +372,9 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6">Tasas de Crecimiento del Mercado</Typography>
-                {isEditing && (
-                  <Button startIcon={<AddIcon />} onClick={addPeriod}>
-                    Agregar Período
-                  </Button>
-                )}
+                <Button startIcon={<AddIcon />} onClick={addPeriod}>
+                  Agregar Período
+                </Button>
               </Box>
               
               <TableContainer component={Paper}>
@@ -367,7 +385,7 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                       {bcgData.salesForecast.products.map(product => (
                         <TableCell key={product.id} align="center">{product.name}</TableCell>
                       ))}
-                      {isEditing && <TableCell align="center">Acciones</TableCell>}
+                      <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -378,31 +396,25 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
                           const productValue = period.productValues.find(pv => pv.productId === product.id);
                           return (
                             <TableCell key={product.id} align="center">
-                              {isEditing ? (
-                                <TextField
-                                  type="number"
-                                  value={productValue?.value || 0}
-                                  onChange={(e) => updatePeriodValue(period.id, product.id, e.target.value)}
-                                  size="small"
-                                  sx={{ width: 80 }}
-                                />
-                              ) : (
-                                productValue?.value || 0
-                              )}
+                              <TextField
+                                type="number"
+                                value={productValue?.value || 0}
+                                onChange={(e) => updatePeriodValue(period.id, product.id, e.target.value)}
+                                size="small"
+                                sx={{ width: 80 }}
+                              />
                             </TableCell>
                           );
                         })}
-                        {isEditing && (
-                          <TableCell align="center">
-                            <IconButton 
-                              onClick={() => removePeriod(period.id)}
-                              color="error"
-                              size="small"
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </TableCell>
-                        )}
+                        <TableCell align="center">
+                          <IconButton 
+                            onClick={() => removePeriod(period.id)}
+                            color="error"
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -417,7 +429,6 @@ const BCGMatrixSection = ({ projectId, isEditing, onEdit, onSave }) => {
            <CompetitorSalesTable 
              bcgData={bcgData}
              setBcgData={setBcgData}
-             isEditing={isEditing}
            />
          </Grid>
 

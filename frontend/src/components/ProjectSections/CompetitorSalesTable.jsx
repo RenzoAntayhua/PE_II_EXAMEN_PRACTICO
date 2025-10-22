@@ -15,12 +15,12 @@ import {
   Chip
 } from '@mui/material';
 
-const CompetitorSalesTable = ({ bcgData, setBcgData, isEditing }) => {
-  const updateCompetitorSales = (productId, competitorId, sales) => {
+const CompetitorSalesTable = ({ bcgData, setBcgData }) => {
+  const updateCompetitorSales = (productId, competitorIndex, sales) => {
     const updatedProducts = bcgData.competitorSales.products.map(product => {
       if (product.productId === productId) {
-        const updatedCompetitors = product.competitors.map(comp =>
-          comp.id === competitorId ? { ...comp, sales: Number(sales) || 0 } : comp
+        const updatedCompetitors = product.competitors.map((comp, idx) =>
+          idx === competitorIndex ? { ...comp, sales: Number(sales) || 0 } : comp
         );
         
         // Calcular el mayor valor de ventas entre competidores
@@ -93,7 +93,7 @@ const CompetitorSalesTable = ({ bcgData, setBcgData, isEditing }) => {
                     );
                     
                     const competitorId = `CP${productIndex + 1}-${competitorIndex + 1}`;
-                    const competitor = competitorProduct?.competitors.find(c => c.id === competitorId);
+                    const competitor = competitorProduct?.competitors?.[competitorIndex];
                     
                     return (
                       <React.Fragment key={product.id}>
@@ -101,22 +101,18 @@ const CompetitorSalesTable = ({ bcgData, setBcgData, isEditing }) => {
                           {competitorId}
                         </TableCell>
                         <TableCell align="center">
-                          {isEditing ? (
-                            <TextField
-                              type="number"
-                              value={competitor?.sales || 0}
-                              onChange={(e) => updateCompetitorSales(
-                                product.id, 
-                                competitorId, 
-                                e.target.value
-                              )}
-                              size="small"
-                              sx={{ width: 80 }}
-                              inputProps={{ min: 0 }}
-                            />
-                          ) : (
-                            (competitor?.sales || 0).toLocaleString()
-                          )}
+                          <TextField
+                            type="number"
+                            value={competitor?.sales || 0}
+                            onChange={(e) => updateCompetitorSales(
+                              product.id, 
+                             competitorIndex, 
+                              e.target.value
+                            )}
+                            size="small"
+                            sx={{ width: 80 }}
+                            inputProps={{ min: 0 }}
+                          />
                         </TableCell>
                       </React.Fragment>
                     );

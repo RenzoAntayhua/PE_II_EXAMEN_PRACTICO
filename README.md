@@ -1,297 +1,80 @@
-# 🧠 MindPlan - Sistema Colaborativo de Planeamiento Estratégico de TI
+# 🧠 MindPlan — Sistema Colaborativo de Planeamiento Estratégico de TI
 
-## 🆕 Últimas Actualizaciones
+MindPlan es una plataforma colaborativa para gestionar el planeamiento estratégico de TI con edición en tiempo real, exportación a PDF, y componentes visuales modernos.
 
-### 🐳 Implementación con Docker (Commit Anterior)
-Hemos mejorado significativamente la experiencia de instalación y despliegue de MindPlan mediante la implementación de **Docker**. Esto significa que:
+Link de la Repositorio : [Repositorio Github](https://github.com/RenzoAntayhua/PE_II_EXAMEN_PRACTICO)
 
-- **Instalación Simplificada**: Ya no necesitas configurar manualmente bases de datos ni dependencias complejas
-- **Funcionamiento Garantizado**: La aplicación funciona de manera idéntica en cualquier computadora o servidor
-- **Despliegue Rápido**: Con un solo comando puedes tener toda la aplicación funcionando
-- **Mantenimiento Reducido**: Las actualizaciones y el mantenimiento son mucho más sencillos
-- **Escalabilidad**: Fácil expansión para equipos más grandes o mayor carga de trabajo
 
-### 📊 Nueva Funcionalidad: Matriz BCG (Commit Actual)
-Hemos incorporado una poderosa herramienta de análisis empresarial: **la Matriz BCG (Boston Consulting Group)**. Esta nueva funcionalidad te permite:
+## 🆕 Cambios recientes
+- 🐳 Dockerización completa con Docker Compose: `frontend` (Vite), `backend` (Express) y `mongo`.
+- 🔐 CORS y Socket.IO configurados para `http://localhost:5173` vía `FRONTEND_URL` y `VITE_DEV_URL`.
+- 🔁 Instalación reproducible en contenedores con `npm ci` y lock files.
+- 📊 Nueva sección de Matriz BCG con visualización usando `d3` (dependencia agregada al frontend).
+- 🧾 Notas PDF: Puppeteer no descarga Chromium por defecto para reducir el tamaño de la imagen.
 
-#### 🎯 Análisis de Portafolio de Productos
-- **Evaluar tus productos o servicios** según su participación en el mercado y crecimiento
-- **Identificar oportunidades de inversión** y productos con mayor potencial
-- **Tomar decisiones estratégicas informadas** sobre dónde enfocar recursos
+## 🚀 Ejecutar con Docker
+Requisitos: tener Docker Desktop instalado y corriendo.
 
-#### 📈 Herramientas Incluidas
-- **Tabla de Previsión de Ventas**: Proyecta y analiza las ventas esperadas de cada producto
-- **Análisis de Crecimiento del Mercado**: Evalúa las tendencias y oportunidades de crecimiento
-- **Comparación Competitiva**: Analiza cómo te posicionas frente a la competencia
-- **Visualización Interactiva**: Gráfico de burbujas que muestra claramente la posición de cada producto
-- **Categorización Automática**: Clasifica automáticamente tus productos en:
-  - ⭐ **Estrellas**: Productos con alto crecimiento y alta participación (invertir para mantener liderazgo)
-  - ❓ **Interrogaciones**: Alto crecimiento, baja participación (evaluar potencial de inversión)
-  - 🐄 **Vacas Lecheras**: Bajo crecimiento, alta participación (generar flujo de efectivo)
-  - 🐕 **Perros**: Bajo crecimiento, baja participación (considerar desinversión)
-
-#### 💼 Beneficios Empresariales
-- **Optimización de Recursos**: Identifica dónde invertir tu presupuesto para máximo retorno
-- **Planificación Estratégica**: Desarrolla estrategias específicas para cada categoría de productos
-- **Ventaja Competitiva**: Toma decisiones basadas en datos concretos del mercado
-- **Crecimiento Sostenible**: Balancea productos establecidos con oportunidades de crecimiento
-
----
-
-## 📋 Descripción General
-
-MindPlan es una aplicación web colaborativa diseñada para facilitar el proceso de planeamiento estratégico de TI en organizaciones. Permite a los equipos crear, gestionar y colaborar en proyectos estratégicos de manera eficiente, organizada y controlada.
-
-## 🚀 Características Principales
-
-### 📋 Gestión de Proyectos
-- **Creación y administración** de proyectos de planeamiento estratégico
-- **Colaboración en tiempo real** entre miembros del equipo
-- **Control de acceso** y gestión de permisos por proyecto
-- **Dashboard intuitivo** para visualización general de proyectos
-
-### 📊 Secciones Estratégicas
-- **Misión y Visión**: Definición clara de propósito y objetivos organizacionales
-- **Objetivos Estratégicos**: Gestión de metas con prioridades y estados de seguimiento
-- **Análisis FODA**: Evaluación completa de Fortalezas, Oportunidades, Debilidades y Amenazas
-- **Identificación de Estrategias**: Desarrollo de planes de acción estratégicos
-- **Conclusiones**: Síntesis y resultados del proceso de planeamiento
-
-### 🔧 Funcionalidades Técnicas
-- **Editor de texto enriquecido** con React Quill
-- **Exportación a PDF** de documentos estratégicos
-- **Historial de versiones** y seguimiento de cambios
-- **Comunicación en tiempo real** con Socket.IO
-- **Interfaz responsive** con Material-UI
-- **Autenticación segura** con JWT
-
-## 🛠️ Tecnologías Utilizadas
-
-### Frontend
-- **React 18.2.0** - Framework principal
-- **Material-UI 5.14.5** - Componentes de interfaz
-- **React Router 6.15.0** - Navegación
-- **Socket.IO Client 4.8.1** - Comunicación en tiempo real
-- **Axios 1.5.0** - Cliente HTTP
-- **React Quill 2.0.0** - Editor de texto enriquecido
-- **jsPDF 2.5.1** - Generación de PDFs
-- **html2canvas 1.4.1** - Captura de elementos HTML
-- **React Beautiful DnD 13.1.1** - Drag and drop
-- **Vite 4.4.5** - Build tool
-- **Tailwind CSS 3.3.3** - Framework CSS
-
-### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express 4.18.2** - Framework web
-- **MongoDB** con **Mongoose 7.5.0** - Base de datos
-- **Socket.IO 4.7.2** - Comunicación en tiempo real
-- **JWT** - Autenticación
-- **bcryptjs 2.4.3** - Encriptación de contraseñas
-- **Puppeteer 21.1.1** - Generación de PDFs del lado del servidor
-- **Handlebars 4.7.8** - Motor de plantillas
-
-## 📁 Estructura del Proyecto
-
-MindPlan/
-├── frontend/                 # Aplicación React
-│   ├── src/
-│   │   ├── components/      # Componentes reutilizables
-│   │   ├── pages/          # Páginas principales
-│   │   ├── contexts/       # Contextos de React
-│   │   └── utils/          # Utilidades y helpers
-│   ├── package.json
-│   └── vite.config.js
-├── backend/                 # API Node.js
-│   ├── src/
-│   │   ├── controllers/    # Controladores de rutas
-│   │   ├── models/         # Modelos de MongoDB
-│   │   ├── routes/         # Definición de rutas
-│   │   ├── middleware/     # Middleware personalizado
-│   │   └── socket/         # Configuración de Socket.IO
-│   └── package.json
-└── README.md
-
-## 🚀 Instalación y Configuración
-
-### Prerrequisitos
-- Node.js (versión 16 o superior)
-- MongoDB
-- npm
-
-### Instalación
-
-1. **Clonar el repositorio**
-```bash
-git clone https://github.com/srg-cp/mindplan.git
-cd mindplan
+1) En la raíz del proyecto, construir y levantar servicios:
 ```
-
-2. **Instalar dependencias del backend**
-```bash
-cd backend
-npm install
-npm install socket.io-client react-quill
-```
-
-3. **Instalar dependencias del frontend**
-```bash
-cd ../frontend
-npm install
-npm install socket.io-client react-quill
-```
-
-4. **Configurar variables de entorno**
-
-Crear archivo `.env` en la carpeta `backend`:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/mindplan
-JWT_SECRET=tu_jwt_secret_aqui
-NODE_ENV=development
-```
-
-Crear archivo `.env` en la carpeta `frontend`:
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_SOCKET_URL=http://localhost:5000
-```
-
-### Ejecución
-
-1. **Iniciar el backend**
-```bash
-cd backend
-npm run dev
-```
-
-2. **Iniciar el frontend**
-```bash
-cd frontend
-npm run dev
-```
-
-La aplicación estará disponible en `http://localhost:5173`
-
-## 📖 Uso de la Aplicación
-
-### 1. Registro y Autenticación
-- Crear una cuenta nueva o iniciar sesión
-- Sistema de autenticación seguro con JWT
-
-### 2. Dashboard
-- Vista general de todos los proyectos
-- Acceso rápido a proyectos recientes
-- Creación de nuevos proyectos
-
-### 3. Gestión de Proyectos
-- Crear proyectos con nombre, descripción y objetivos
-- Invitar colaboradores al proyecto
-- Configurar permisos y accesos
-
-### 4. Trabajo Colaborativo
-- Edición simultánea en tiempo real
-- Historial de cambios y versiones
-
-### 5. Exportación
-- Generar documentos PDF profesionales
-- Incluir todas las secciones del planeamiento
-- Formato personalizable
-
-## 👥 Equipo de Desarrollo
-
-- **Sergio Alberto Colque Ponce** - Desarrollador Full Stack
-- **Renzo Antayhua** - Desarrollador Full Stack  
-- **Reenzo Loyola** - Desarrollador Full Stack
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
-
-## 📝 Scripts Disponibles
-
-### Frontend
-```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Build de producción
-npm run preview  # Preview del build
-```
-
-### Backend
-```bash
-npm start        # Servidor de producción
-npm run dev      # Servidor de desarrollo con nodemon
-npm test         # Ejecutar tests
-```
-
-## 🔒 Seguridad
-
-- Autenticación JWT
-- Encriptación de contraseñas con bcrypt
-- Validación de datos de entrada
-- Protección CORS configurada
-- Middleware de autenticación en rutas protegidas
-
-## 📊 Funcionalidades Avanzadas
-
-- **Gestión de objetivos** con prioridades y estados
-- **Exportación PDF** con plantillas profesionales
-- **Historial de versiones** completo
-- **Colaboración en tiempo real** con Socket.IO
-
-## 🐛 Reporte de Bugs
-
-Si encuentras algún bug, por favor crea un issue en el repositorio incluyendo:
-- Descripción detallada del problema
-- Pasos para reproducir el bug
-- Capturas de pantalla si es necesario
-- Información del navegador y sistema operativo
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia APACHE 2.0. Ver el archivo `LICENSE` para más detalles.
-
-**MindPlan** - Transformando la manera en que las organizaciones planifican su futuro tecnológico 🚀
-
-## 🚢 Docker
-
-Para ejecutar MindPlan localmente con Docker (frontend, backend y base de datos MongoDB):
-
-### Requisitos
-- Docker Desktop instalado y corriendo.
-
-### Servicios
-- `mongo`: MongoDB con persistencia local en volumen `mongo-data`.
-- `backend`: API Express con Mongoose, puerto `5000`.
-- `frontend`: Vite dev server, puerto `5173`.
-
-### Puertos
-- Frontend: `http://localhost:5173`
-- Backend (API): `http://localhost:5000`
-- MongoDB: `mongodb://localhost:27017` (DB `mindplan`)
-
-### Variables y CORS
-- El backend permite orígenes: `FRONTEND_URL` y `VITE_DEV_URL` configurados a `http://localhost:5173`.
-- El frontend usa:
-  - `VITE_PROXY_TARGET` para el proxy `/api` del servidor de Vite (apunta a `http://backend:5000`).
-  - `VITE_BACKEND_URL` y `VITE_API_URL` para llamadas absolutas en el navegador (apuntan a `http://localhost:5000`).
-
-### Inicio rápido
-```bash
-# En la raíz del proyecto
 docker compose up --build
 ```
-- Abre `http://localhost:5173` para la UI.
-- La API estará disponible en `http://localhost:5000`.
+2) Abrir la aplicación:
+- Frontend (Vite): `http://localhost:5173/`
+- Backend (API): `http://localhost:5000/`
+- MongoDB: `mongodb://localhost:27017` (DB `mindplan`)
 
-### Mantenimiento
+Comandos útiles:
 - Detener: `docker compose down`
-- Reiniciar en segundo plano: `docker compose up -d`
-- Volumen de datos: `mongo-data` (persistencia). Eliminar datos implica borrar ese volumen.
+- Levantar en segundo plano: `docker compose up -d`
+- Logs backend: `docker compose logs backend -f`
+- Logs frontend: `docker compose logs frontend -f`
 
-### Notas
-- Exportación PDF: si necesitas Puppeteer con Chromium, edita `backend/Dockerfile` y elimina `PUPPETEER_SKIP_DOWNLOAD=1`, luego `docker compose up --build`.
-- Si prefieres servir el frontend en producción (Nginx), podemos agregar un Dockerfile multi-stage alternativo y un reverse proxy para `/api`.
+## ⚙️ Servicios y puertos
+- `mongo` → puerto `27017`, volumen persistente `mongo-data`.
+- `backend` → puerto `5000`.
+- `frontend` → puerto `5173`.
+
+## 🔧 Variables de entorno (ya definidas en Compose)
+Backend:
+- `PORT=5000`
+- `MONGODB_URI=mongodb://mongo:27017/mindplan`
+- `JWT_SECRET=secret`
+- `FRONTEND_URL=http://localhost:5173`
+- `VITE_DEV_URL=http://localhost:5173`
+
+Frontend:
+- `VITE_PROXY_TARGET=http://backend:5000` (proxy `/api` del dev server)
+- `VITE_BACKEND_URL=http://localhost:5000`
+- `VITE_API_URL=http://localhost:5000`
+
+## ✅ Verificación de dependencias
+- Se reconstruyeron las imágenes con `npm ci` y se instalaron dependencias según `package-lock.json`.
+- Se detectó y solucionó un error de frontend por dependencia faltante (`d3`). Se agregó al `package.json`, se actualizó el lock y el servidor Vite arrancó correctamente en `http://localhost:5173/`.
+- Para asegurar imágenes base actualizadas: `docker compose build --pull`.
+
+## 📝 Notas sobre PDFs (Puppeteer)
+La imagen de backend establece `PUPPETEER_SKIP_DOWNLOAD=1` para reducir tamaño. Si necesitas exportación PDF con Chromium integrado:
+1) Edita `backend/Dockerfile` y elimina `ENV PUPPETEER_SKIP_DOWNLOAD=1`.
+2) Reconstruye: `docker compose up --build`.
+
+## 📚 Stack principal
+- Frontend: React, Vite, Material UI, Tailwind, Socket.IO Client, Axios, `d3`.
+- Backend: Node.js, Express, Mongoose, Socket.IO, JWT, Puppeteer, Handlebars.
+- Infra: Docker Compose, MongoDB.
+
+## 🤝 Contribución
+- PRs y mejoras bienvenidas. Ejecuta `docker compose up --build` para mantener coherencia con el entorno.
+
+## 📄 Licencia
+Este proyecto está bajo la Licencia Apache 2.0. Ver `LICENSE`.
+
+## 📷 Imágenes de Cambios
+
+![Cambios 1](Cambios/Cambios.png)
+
+![Cambios 2](Cambios/Cambios2.png)
+
+![Cambios 3](Cambios/Cambios3.png)
+
+![Cambios 4](Cambios/Cambios4.png)
