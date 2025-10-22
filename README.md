@@ -215,3 +215,43 @@ Si encuentras algún bug, por favor crea un issue en el repositorio incluyendo:
 Este proyecto está bajo la Licencia APACHE 2.0. Ver el archivo `LICENSE` para más detalles.
 
 **MindPlan** - Transformando la manera en que las organizaciones planifican su futuro tecnológico 🚀
+
+## 🚢 Docker
+
+Para ejecutar MindPlan localmente con Docker (frontend, backend y base de datos MongoDB):
+
+### Requisitos
+- Docker Desktop instalado y corriendo.
+
+### Servicios
+- `mongo`: MongoDB con persistencia local en volumen `mongo-data`.
+- `backend`: API Express con Mongoose, puerto `5000`.
+- `frontend`: Vite dev server, puerto `5173`.
+
+### Puertos
+- Frontend: `http://localhost:5173`
+- Backend (API): `http://localhost:5000`
+- MongoDB: `mongodb://localhost:27017` (DB `mindplan`)
+
+### Variables y CORS
+- El backend permite orígenes: `FRONTEND_URL` y `VITE_DEV_URL` configurados a `http://localhost:5173`.
+- El frontend usa:
+  - `VITE_PROXY_TARGET` para el proxy `/api` del servidor de Vite (apunta a `http://backend:5000`).
+  - `VITE_BACKEND_URL` y `VITE_API_URL` para llamadas absolutas en el navegador (apuntan a `http://localhost:5000`).
+
+### Inicio rápido
+```bash
+# En la raíz del proyecto
+docker compose up --build
+```
+- Abre `http://localhost:5173` para la UI.
+- La API estará disponible en `http://localhost:5000`.
+
+### Mantenimiento
+- Detener: `docker compose down`
+- Reiniciar en segundo plano: `docker compose up -d`
+- Volumen de datos: `mongo-data` (persistencia). Eliminar datos implica borrar ese volumen.
+
+### Notas
+- Exportación PDF: si necesitas Puppeteer con Chromium, edita `backend/Dockerfile` y elimina `PUPPETEER_SKIP_DOWNLOAD=1`, luego `docker compose up --build`.
+- Si prefieres servir el frontend en producción (Nginx), podemos agregar un Dockerfile multi-stage alternativo y un reverse proxy para `/api`.
