@@ -408,6 +408,127 @@ const removeMember = async (req, res) => {
   }
 };
 
+// Actualizar BCG Matrix
+const updateBCGMatrix = async (req, res) => {
+  try {
+    const { bcgData } = req.body;
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: 'Proyecto no encontrado' });
+    }
+
+    // Verificar que el usuario tenga acceso
+    const hasAccess = project.owner.toString() === req.user._id.toString() ||
+                     project.members.some(member => member.toString() === req.user._id.toString());
+
+    if (!hasAccess) {
+      return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
+    // Calcular valores automáticamente
+    if (bcgData.salesForecast && bcgData.salesForecast.products) {
+      // Calcular total de ventas y porcentajes
+      const totalSales = bcgData.salesForecast.products.reduce((sum, product) => sum + (product.sales || 0), 0);
+      bcgData.salesForecast.totalSales = totalSales;
+      
+      // Calcular porcentajes
+      bcgData.salesForecast.products.forEach(product => {
+        product.percentage = totalSales > 0 ? (product.sales / totalSales) * 100 : 0;
+      });
+    }
+
+    // Calcular valores máximos de competidores
+    if (bcgData.competitorSales && bcgData.competitorSales.products) {
+      bcgData.competitorSales.products.forEach(productData => {
+        if (productData.competitors && productData.competitors.length > 0) {
+          productData.maxCompetitorSales = Math.max(...productData.competitors.map(comp => comp.sales || 0));
+        }
+      });
+    }
+
+    // Calcular valores de la tabla BCG
+    if (bcgData.bcgTable && bcgData.bcgTable.products) {
+      bcgData.bcgTable.products.forEach(bcgProduct => {
+        // TCM: Promedio de valores de crecimiento del mercado para este producto
+        if (bcgData.marketGrowthRates && bcgData.marketGrowthRates.periods) {
+          const productValues = bcgData.marketGrowthRates.periods
+            .map(period => {
+              const productValue = period.productValues.find(pv => pv.productId === bcgProduct.productId);
+              return productValue ? productValue.value : 0;
+            })
+            .filter(value => value !== null && value !== undefined);
+          
+          bcgProduct.tcm = productValues.length > 0 
+            ? productValues.reduce((sum, val) => sum + val, 0) / productValues.length 
+            : 0;
+        }
+
+        // PRM: Fórmula específica basada en competidores
+        const competitorData = bcgData.competitorSales?.products?.find(cp => cp.productId === bcgProduct.productId);
+        const productSales = bcgData.salesForecast?.products?.find(p => p.id === bcgProduct.productId)?.sales || 0;
+        
+        if (competitorData && competitorData.maxCompetitorSales > 0) {
+          const ratio = productSales / competitorData.maxCompetitorSales;
+          bcgProduct.prm = ratio > 2 ? 2 : ratio;
+        } else {
+          bcgProduct.prm = 0;
+        }
+
+        // % S/VTAS: Porcentaje de ventas de la tabla de previsión
+        const salesProduct = bcgData.salesForecast?.products?.find(p => p.id === bcgProduct.productId);
+        bcgProduct.salesPercentage = salesProduct ? salesProduct.percentage : 0;
+      });
+    }
+
+    // Actualizar la matriz BCG
+    if (!project.sections) {
+      project.sections = {};
+    }
+    project.sections.bcgMatrix = bcgData;
+    await project.save();
+
+    res.json({ 
+      message: 'Matriz BCG actualizada exitosamente',
+      bcgMatrix: project.sections.bcgMatrix 
+    });
+  } catch (error) {
+    console.error('Error actualizando matriz BCG:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+// Obtener BCG Matrix
+const getBCGMatrix = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: 'Proyecto no encontrado' });
+    }
+
+    // Verificar que el usuario tenga acceso
+    const hasAccess = project.owner.toString() === req.user._id.toString() ||
+                     project.members.some(member => member.toString() === req.user._id.toString());
+
+    if (!hasAccess) {
+      return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
+    const bcgMatrix = project.sections?.bcgMatrix || {
+      salesForecast: { products: [], totalSales: 0 },
+      marketGrowthRates: { periods: [] },
+      competitorSales: { products: [] },
+      bcgTable: { products: [] }
+    };
+
+    res.json({ bcgMatrix });
+  } catch (error) {
+    console.error('Error obteniendo matriz BCG:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
@@ -417,5 +538,7 @@ module.exports = {
   addMember,
   removeMember,
   getProjectSections,
-  updateProjectSections
+  updateProjectSections,
+  updateBCGMatrix,
+  getBCGMatrix
 };

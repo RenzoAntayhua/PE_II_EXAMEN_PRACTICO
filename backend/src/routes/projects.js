@@ -9,7 +9,9 @@ const {
   addMember,
   removeMember,
   getProjectSections,
-  updateProjectSections
+  updateProjectSections,
+  updateBCGMatrix,
+  getBCGMatrix
 } = require('../controllers/projectController');
 const auth = require('../middleware/auth');
 
@@ -85,6 +87,16 @@ router.post('/:id/members', auth, addMember);
 // @desc    Remover miembro del proyecto
 // @access  Private
 router.delete('/:id/members/:userId', auth, removeMember);
+
+// @route   GET /api/projects/:id/bcg-matrix
+// @desc    Obtener matriz BCG del proyecto
+// @access  Private
+router.get('/:id/bcg-matrix', auth, getBCGMatrix);
+
+// @route   PUT /api/projects/:id/bcg-matrix
+// @desc    Actualizar matriz BCG del proyecto
+// @access  Private
+router.put('/:id/bcg-matrix', auth, updateBCGMatrix);
 
 // Agregar estas rutas después de las existentes
 

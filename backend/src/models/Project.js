@@ -80,6 +80,77 @@ const projectSchema = new mongoose.Schema({
         default: []
       }
     },
+    bcgMatrix: {
+      // Tabla de Previsión de Ventas
+      salesForecast: {
+        products: [{
+          id: Number,
+          name: String,
+          sales: {
+            type: Number,
+            default: 0
+          },
+          percentage: {
+            type: Number,
+            default: 0
+          }
+        }],
+        totalSales: {
+          type: Number,
+          default: 0
+        }
+      },
+      // Tabla de Tasas de Crecimiento del Mercado
+      marketGrowthRates: {
+        periods: [{
+          id: Number,
+          name: String,
+          productValues: [{
+            productId: Number,
+            value: {
+              type: Number,
+              default: 0
+            }
+          }]
+        }]
+      },
+      // Tabla de Niveles de Venta de los Competidores
+      competitorSales: {
+        products: [{
+          productId: Number,
+          competitors: [{
+            id: String, // CP{productNumber}-{competitorNumber}
+            name: String,
+            sales: {
+              type: Number,
+              default: 0
+            }
+          }],
+          maxCompetitorSales: {
+            type: Number,
+            default: 0
+          }
+        }]
+      },
+      // Tabla BCG con cálculos
+      bcgTable: {
+        products: [{
+          productId: Number,
+          tcm: {
+            type: Number,
+            default: 0
+          }, // Tasa de Crecimiento del Mercado (promedio)
+          prm: {
+            type: Number,
+            default: 0
+          }, // Posición Relativa del Mercado
+          salesPercentage: {
+            type: Number,
+            default: 0
+          } // % S/VTAS
+        }]
+      }
+    },
     valueChainDiagnostic: {
       diagnostic: {
         type: mongoose.Schema.Types.Mixed,

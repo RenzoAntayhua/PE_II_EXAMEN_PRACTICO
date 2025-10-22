@@ -25,7 +25,8 @@ import {
   History as HistoryIcon,
   Download,
   Save as SaveIcon,
-  CheckCircle as CheckCircleIcon
+  CheckCircle as CheckCircleIcon,
+  Analytics as BCGIcon
 } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -40,6 +41,7 @@ import ObjectivesSection from './ProjectSections/ObjectivesSection';
 import StrategySection from './ProjectSections/StrategySection';
 import ConclusionsSection from './ProjectSections/ConclusionsSection';
 import ValueChainDiagnosticSection from './ProjectSections/ValueChainDiagnosticSection';
+import BCGMatrixSection from './ProjectSections/BCGMatrixSection';
 
 // Importar componentes adicionales
 import ConnectedUsersHeader from './ConnectedUsers/ConnectedUsersHeader';
@@ -93,6 +95,12 @@ const ProjectView = () => {
       label: 'Autodiagnóstico Cadena de Valor',
       icon: <ValueChainIcon />,
       component: ValueChainDiagnosticSection
+    },
+    {
+      id: 'bcgMatrix',
+      label: 'Matriz BCG',
+      icon: <BCGIcon />,
+      component: BCGMatrixSection
     },
     {
       id: 'strategy',
