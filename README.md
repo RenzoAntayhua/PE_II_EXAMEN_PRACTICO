@@ -1,5 +1,45 @@
 # 🧠 MindPlan - Sistema Colaborativo de Planeamiento Estratégico de TI
 
+## 🆕 Últimas Actualizaciones
+
+### 🐳 Implementación con Docker (Commit Anterior)
+Hemos mejorado significativamente la experiencia de instalación y despliegue de MindPlan mediante la implementación de **Docker**. Esto significa que:
+
+- **Instalación Simplificada**: Ya no necesitas configurar manualmente bases de datos ni dependencias complejas
+- **Funcionamiento Garantizado**: La aplicación funciona de manera idéntica en cualquier computadora o servidor
+- **Despliegue Rápido**: Con un solo comando puedes tener toda la aplicación funcionando
+- **Mantenimiento Reducido**: Las actualizaciones y el mantenimiento son mucho más sencillos
+- **Escalabilidad**: Fácil expansión para equipos más grandes o mayor carga de trabajo
+
+### 📊 Nueva Funcionalidad: Matriz BCG (Commit Actual)
+Hemos incorporado una poderosa herramienta de análisis empresarial: **la Matriz BCG (Boston Consulting Group)**. Esta nueva funcionalidad te permite:
+
+#### 🎯 Análisis de Portafolio de Productos
+- **Evaluar tus productos o servicios** según su participación en el mercado y crecimiento
+- **Identificar oportunidades de inversión** y productos con mayor potencial
+- **Tomar decisiones estratégicas informadas** sobre dónde enfocar recursos
+
+#### 📈 Herramientas Incluidas
+- **Tabla de Previsión de Ventas**: Proyecta y analiza las ventas esperadas de cada producto
+- **Análisis de Crecimiento del Mercado**: Evalúa las tendencias y oportunidades de crecimiento
+- **Comparación Competitiva**: Analiza cómo te posicionas frente a la competencia
+- **Visualización Interactiva**: Gráfico de burbujas que muestra claramente la posición de cada producto
+- **Categorización Automática**: Clasifica automáticamente tus productos en:
+  - ⭐ **Estrellas**: Productos con alto crecimiento y alta participación (invertir para mantener liderazgo)
+  - ❓ **Interrogaciones**: Alto crecimiento, baja participación (evaluar potencial de inversión)
+  - 🐄 **Vacas Lecheras**: Bajo crecimiento, alta participación (generar flujo de efectivo)
+  - 🐕 **Perros**: Bajo crecimiento, baja participación (considerar desinversión)
+
+#### 💼 Beneficios Empresariales
+- **Optimización de Recursos**: Identifica dónde invertir tu presupuesto para máximo retorno
+- **Planificación Estratégica**: Desarrolla estrategias específicas para cada categoría de productos
+- **Ventaja Competitiva**: Toma decisiones basadas en datos concretos del mercado
+- **Crecimiento Sostenible**: Balancea productos establecidos con oportunidades de crecimiento
+
+---
+
+## 📋 Descripción General
+
 MindPlan es una aplicación web colaborativa diseñada para facilitar el proceso de planeamiento estratégico de TI en organizaciones. Permite a los equipos crear, gestionar y colaborar en proyectos estratégicos de manera eficiente, organizada y controlada.
 
 ## 🚀 Características Principales
